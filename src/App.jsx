@@ -1937,7 +1937,7 @@ const getProductImage = (productName) => {
     <p>{product.price}</p>
   </div>
 ))}
-
+}
 
 export default App
-}
+
