@@ -1881,4 +1881,64 @@ export default function App() {
       <div className={`toast ${toast?"show":""}`}>{toast}</div>
     </>
   );
+  function App() {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {/* --- HERO SECTION WITH VIDEO BACKGROUND --- */}
+      <section className="relative w-full h-screen overflow-hidden">
+        {/* Background Video */}
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
+
+        {/* Hero Content Overlay */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/40">
+          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
+          <p className="mt-4 text-xl">ON TO GOD</p>
+        </div>
+      </section>
+
+      {/* The rest of your existing homepage/products sections go below here... */}
+    </div>
+  )
+}
+
+export default App
+
+// 1. Tell Vite to automatically scan all images inside src/assets/images
+const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG}', {
+  eager: true,
+  as: 'url'
+});
+
+// 2. Helper function to find the image using ONLY the product folder name
+const getProductImage = (productName) => {
+  const matchKey = Object.keys(productImages).find((path) =>
+    path.toLowerCase().includes(`/images/${productName.toLowerCase()}/`)
+  );
+  return matchKey ? productImages[matchKey] : '';
+};
+
+
+
+{products.map((product) => (
+  <div key={product.id} className="product-card">
+    <img 
+      src={getProductImage(product.name)} 
+      alt={product.name} 
+      className="w-full h-auto object-cover"
+    />
+    <h3>{product.name}</h3>
+    <p>{product.price}</p>
+  </div>
+))}
+
+
+
 }
