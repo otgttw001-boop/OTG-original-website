@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx'; // <--- REMOVE THE CURLY BRACES!
+import App from 'src/App.jsx'; // <--- REMOVE THE CURLY BRACES!
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
