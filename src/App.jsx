@@ -1916,7 +1916,6 @@ const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,web
   as: 'url'
 });
 
-// 1. GLOB & HELPER FUNCTIONS SIT AT THE VERY TOP (OUTSIDE APP)
 const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG,JPEG}', {
   eager: true,
   import: 'default',
@@ -1929,10 +1928,10 @@ const getProductImage = (productName) => {
   return matchKey ? productImages[matchKey] : '';
 };
 
-// 2. YOUR MAIN APP COMPONENT
+// 2. MAIN COMPONENT
 function App() {
   const products = [
-    // Your product objects go here...
+    // Your product objects go here
   ];
 
   return (
@@ -1955,7 +1954,7 @@ function App() {
         </div>
       </section>
 
-      {/* Product Grid Section - JSX MAP GOES INSIDE RETURN */}
+      {/* Products Section */}
       <section className="p-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {products.map((product) => (
@@ -1972,9 +1971,10 @@ function App() {
         </div>
       </section>
     </div>
-  )
+  );
+}
 }
 
-
-// 3. EXPORT STATEMENT IS THE VERY LAST LINE
+// 3. EXPORT STATEMENT AT THE ABSOLUTE END
 export default App
+
