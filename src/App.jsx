@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const CONFIG = {
@@ -477,7 +477,6 @@ const DELIVERY_ZONES = [
 ];
 
 // ── SIZE CHART ────────────────────────────────────────────────────────────────
-// NOTE: placeholder measurements — swap in your real garment measurements
 const SIZE_CHART = {
   unisex: [
     { size: "S",   chest: "36–38", length: "27", shoulder: "17.5" },
@@ -1280,12 +1279,12 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
       </div>
     </div>
   );
-
+} // <-- CLOSED ProductPage
 
 // ── CHECKOUT PAGE ─────────────────────────────────────────────────────────────
 function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ firstName:"", lastName:"", email:"", phone:"", address:"", city:"", state:"" });
+  const [form, setForm] = useState({ firstName:"", lastName:"", email:"", phone:"", address:"", city:"", state:"", lga:"" });
   const [payMethod, setPayMethod] = useState("paystack");
   const [referralCode, setReferralCode] = useState("");
   const [referralStatus, setReferralStatus] = useState(null);
@@ -1294,13 +1293,18 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState("");
 
-  useEffect(() => { if (cart.length === 0 && step < 3) setPage("shop"); }, []);
+  // Helper to update form fields
+  const f = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 
+  // Derived totals
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const itemsText = cart.map(item => `${item.name} (${item.size}) ×${item.qty}`).join(', ');
   const selectedZone = DELIVERY_ZONES.find(z => z.name === form.lga);
   const shipping = selectedZone ? selectedZone.price : 0;
   const discount = referralStatus === "valid" ? Math.round(subtotal * 0.05) : 0;
   const finalTotal = subtotal + shipping - discount;
   const formComplete = form.firstName && form.lastName && form.email && form.phone && form.address && form.lga;
+
   const checkReferral = async () => {
     if (!referralCode.trim()) return;
     setCheckingRef(true);
@@ -1319,63 +1323,50 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       customer_phone: form.phone,
       customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`,
       items: cart, items_text: itemsText,
-      total: finalTotal + shipping, payment_ref: ref, status: "paid",
+      total: finalTotal, payment_ref: ref, status: "paid",
       referral_code: referralCode, referral_status: referralStatus, note,
     };
     function onPaymentSuccess() {
       processOrder(orderData);
       decrementStock(cart);
-      if (referralCode && referralStatus === "valid") applyReferralReward(referralCode, finalTotal + shipping, form.email, ref);
+      if (referralCode && referralStatus === "valid") applyReferralReward(referralCode, finalTotal, form.email, ref);
       setCart([]); setStep(3);
     }
-    const handler = window.PaystackPop.setup({ key: CONFIG.PAYSTACK_KEY, email: form.email, amount: (finalTotal + shipping) * 100, currency: "NGN", ref, callback: onPaymentSuccess, onClose: () => {} });
+    const handler = window.PaystackPop.setup({ key: CONFIG.PAYSTACK_KEY, email: form.email, amount: finalTotal * 100, currency: "NGN", ref, callback: onPaymentSuccess, onClose: () => {} });
     handler.openIframe();
   };
 
   const handleCOD = async () => {
     setLoading(true);
     const ref = `OTG-COD-${Date.now()}`;
-    await processOrder({ customer_name: `${form.firstName} ${form.lastName}`, customer_email: form.email, customer_phone: form.phone, customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`, items: cart, items_text: itemsText, total: finalTotal + shipping, payment_ref: ref, status: "cash_on_delivery", note });
+    await processOrder({ customer_name: `${form.firstName} ${form.lastName}`, customer_email: form.email, customer_phone: form.phone, customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`, items: cart, items_text: itemsText, total: finalTotal, payment_ref: ref, status: "cash_on_delivery", note });
     decrementStock(cart);
     setLoading(false); setCart([]); setStep(3);
   };
 
-  if (step === 3) return (
-  <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem", textAlign: "center", background: "var(--black)" }}>
-    <div style={{ maxWidth: "500px", width: "100%", padding: "2.5rem", background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: "8px" }}>
-      <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎉</div>
-      <h2 style={{ fontSize: "1.8rem", marginBottom: "0.5rem", color: "var(--white)" }}>Order Placed Successfully!</h2>
-      <p style={{ color: "var(--text-muted)", marginBottom: "1.5rem", fontSize: "0.9rem" }}>
-        Thank you, <strong>{form.firstName}</strong>. We've received your order and will begin processing it shortly for delivery to <strong>{form.lga}</strong>.
-      </p>
-      <button 
-        className="btn-primary" 
-        onClick={() => {
-          clearCart();
-          setPage("shop");
-        }}
-        style={{ width: "100%" }}
-      >
-        Continue Shopping
-      </button>
-    </div>
-  </div>
-);
-}
-
-<div className="form-row">
-  <div className="form-group"><label className="form-label">City</label><input className="form-input" value={form.city} onChange={f("city")} placeholder="Lagos" /></div>
-  <div className="form-group"><label className="form-label">State</label><input className="form-input" value={form.state} onChange={f("state")} placeholder="Lagos State" /></div>
-</div>
-{selectedZone && (
-  <div style={{padding:"1rem",background:"rgba(26,107,58,0.1)",border:"1px solid rgba(26,107,58,0.3)",marginBottom:"1.2rem",borderRadius:"4px"}}>
-    <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.6rem",letterSpacing:"0.15em",color:"var(--green-bright)",marginBottom:"0.3rem"}}>DELIVERY FEE & TIMELINE</div>
-    <div style={{fontSize:"0.85rem",color:"var(--white)",lineHeight:1.5}}>
-      🚚 {selectedZone.name}: <strong>{fmt(selectedZone.price)}</strong> (5–7 working days)
-    </div>
-  </div>
-)}
-
+  if (step === 3) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem", textAlign: "center", background: "var(--black)" }}>
+        <div style={{ maxWidth: "500px", width: "100%", padding: "2.5rem", background: "var(--grey)", border: "1px solid var(--grey3)", borderRadius: "8px" }}>
+          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎉</div>
+          <h2 style={{ fontSize: "1.8rem", marginBottom: "0.5rem", color: "var(--white)" }}>Order Placed Successfully!</h2>
+          <p style={{ color: "var(--text-muted)", marginBottom: "1.5rem", fontSize: "0.9rem" }}>
+            Thank you, <strong>{form.firstName}</strong>. We've received your order and will begin processing it shortly for delivery to <strong>{form.lga}</strong>.
+          </p>
+          <button 
+            className="btn btn-green"
+            onClick={() => {
+              clearCart();
+              setPage("shop");
+            }}
+            style={{ width: "100%", justifyContent: "center" }}
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="checkout-page">
@@ -1402,10 +1393,23 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
                 <div className="form-group"><label className="form-label">City</label><input className="form-input" value={form.city} onChange={f("city")} placeholder="Lagos" /></div>
                 <div className="form-group"><label className="form-label">State</label><input className="form-input" value={form.state} onChange={f("state")} placeholder="Lagos State" /></div>
               </div>
-              <div style={{padding:"1rem",background:"rgba(26,107,58,0.1)",border:"1px solid rgba(26,107,58,0.3)",marginBottom:"1.2rem",borderRadius:"4px"}}>
-                <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.6rem",letterSpacing:"0.15em",color:"var(--green-bright)",marginBottom:"0.3rem"}}>DELIVERY TIMELINE</div>
-                <div style={{fontSize:"0.85rem",color:"var(--white)",lineHeight:1.5}}>🚚 We deliver nationwide within 5–7 working days via Paystack checkout.</div>
+              <div className="form-group">
+                <label className="form-label">Delivery Zone (LGA / Area)</label>
+                <select className="form-select" value={form.lga} onChange={f("lga")}>
+                  <option value="">Select your zone</option>
+                  {DELIVERY_ZONES.map(z => (
+                    <option key={z.name} value={z.name}>{z.name} — {fmt(z.price)}</option>
+                  ))}
+                </select>
               </div>
+              {selectedZone && (
+                <div style={{padding:"1rem",background:"rgba(26,107,58,0.1)",border:"1px solid rgba(26,107,58,0.3)",marginBottom:"1.2rem",borderRadius:"4px"}}>
+                  <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.6rem",letterSpacing:"0.15em",color:"var(--green-bright)",marginBottom:"0.3rem"}}>DELIVERY FEE & TIMELINE</div>
+                  <div style={{fontSize:"0.85rem",color:"var(--white)",lineHeight:1.5}}>
+                    🚚 {selectedZone.name}: <strong>{fmt(selectedZone.price)}</strong> (5–7 working days)
+                  </div>
+                </div>
+              )}
               <div className="form-group">
                 <label className="form-label">Order Note (optional)</label>
                 <input className="form-input" value={note} onChange={e => setNote(e.target.value)} placeholder="Special instructions..." />
@@ -1470,12 +1474,12 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
                   <span>Referral Discount</span><span style={{fontFamily:"'Space Mono',monospace"}}>−{fmt(discount)}</span>
                 </div>
               )}
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.85rem",marginBottom:"0.5rem",color:"var(--text-muted)"}}>
-  <span>Delivery ({form.lga || "Select area"})</span>
-  <span style={{fontFamily:"'Space Mono',monospace",color:"var(--green-bright)"}}>
-    {shipping > 0 ? fmt(shipping) : "₦0"}
-  </span>
-</div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.85rem",marginBottom:"0.5rem",color:"var(--text-muted)"}}>
+                <span>Delivery ({form.lga || "Select area"})</span>
+                <span style={{fontFamily:"'Space Mono',monospace",color:"var(--green-bright)"}}>
+                  {shipping > 0 ? fmt(shipping) : "₦0"}
+                </span>
+              </div>
             </div>
             <div className="order-summary-total">
               <span>Total</span>
@@ -1486,7 +1490,15 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       </div>
     </div>
   );
+} // <-- CLOSED CheckoutPage
 
+// ── CREATORS PAGE ────────────────────────────────────────────────────────────
+function CreatorsPage({ setPage }) {
+  const [pwInput, setPwInput] = useState("");
+  const [pwOk, setPwOk] = useState(false);
+  const [pwError, setPwError] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginCode, setLoginCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [loginError, setLoginError] = useState("");
@@ -1697,6 +1709,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       </div>
     </div>
   );
+} // <-- CLOSED CreatorsPage
 
 // ── ABOUT PAGE ────────────────────────────────────────────────────────────────
 function AboutPage() {
@@ -1773,8 +1786,8 @@ function Footer({ setPage, onSizeGuide }) {
   );
 }
 
-// ── APP ───────────────────────────────────────────────────────────────────────
- function App() {
+// ── MAIN APP ─────────────────────────────────────────────────────────────────
+function App() {
   const [page, setPage] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cart, setCart] = useState([]);
@@ -1858,155 +1871,6 @@ function Footer({ setPage, onSizeGuide }) {
       <div className={`toast ${toast?"show":""}`}>{toast}</div>
     </>
   );
-  function App() {
-  return (
-    <div className="min-h-screen bg-black text-white">
-      {/* --- HERO SECTION WITH VIDEO BACKGROUND --- */}
-      <section className="relative w-full h-screen overflow-hidden">
-        {/* Background Video */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute top-0 left-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        {/* Hero Content Overlay */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/40">
-          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
-          <p className="mt-4 text-xl">ON TO GOD</p>
-        </div>
-      </section>
-
-      {/* The rest of your existing homepage/products sections go below here... */}
-    </div>
-  )
 }
 
-
-
-// 1. Tell Vite to automatically scan all images inside src/assets/images
-const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG,JPEG}', {
-  eager: true,
-  import: 'default',
-});
-
-const getProductImage = (productName) => {
-  const matchKey = Object.keys(productImages).find((path) =>
-    path.toLowerCase().includes(`/images/${productName.toLowerCase()}/`)
-  );
-  return matchKey ? productImages[matchKey] : '';
-};
-
-// 2. MAIN COMPONENT
-function App() {
-  const products = [
-    // Your product objects go here
-  ];
-
-  return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <section className="relative w-full h-screen overflow-hidden">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute top-0 left-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/40">
-          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
-          <p className="mt-4 text-xl">ON TO GOD</p>
-        </div>
-      </section>
-
-      {/* Products Section */}
-      <section className="p-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <img 
-                src={getProductImage(product.name)} 
-                alt={product.name} 
-                className="w-full h-auto object-cover"
-              />
-              <h3 className="mt-2 text-lg font-bold">{product.name}</h3>
-              <p className="text-gray-400">{product.price}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-}
-
-function Hero() {
-  const products = [
-    // Your product objects...
-  ];
-
-  return (
-    <div className="min-h-screen bg-black text-white">
-      
-      {/* ----------------- HERO SECTION START ----------------- */}
-      <section className="relative w-full h-screen overflow-hidden flex items-center justify-center">
-        
-        {/* 👇 PLACES RIGHT HERE AS THE BACKGROUND */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        {/* Text / Overlay content sitting on top of video */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center bg-black/40 p-6 rounded-lg">
-          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
-          <p className="mt-4 text-xl">ON TO GOD</p>
-        </div>
-
-      </section>
-      {/* ------------------ HERO SECTION END ------------------ */}
-
-      {/* Product Grid Section */}
-      <section className="p-8">
-        {/* Product mapping code... */}
-      </section>
-
-    </div>
-  );
-}
-function App() {
-  const [page, setPage] = useState("checkout");
-  const [cart, setCart] = useState([]);
-
-  const clearCart = () => setCart([]);
-
-  return (
-    <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
-      {page === "checkout" && (
-        <CheckoutPage 
-          cart={cart} 
-          clearCart={clearCart} 
-          setCart={setCart} 
-          setPage={setPage} 
-        />
-      )}
-      {page === "creators" && <CreatorsPage />}
-    </div>
-  );
-}
-}
 export default App;
