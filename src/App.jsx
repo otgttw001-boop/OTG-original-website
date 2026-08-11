@@ -1909,7 +1909,6 @@ export default function App() {
   )
 }
 
-export default App
 
 // 1. Tell Vite to automatically scan all images inside src/assets/images
 const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG}', {
@@ -1940,5 +1939,5 @@ const getProductImage = (productName) => {
 ))}
 
 
-
+export default App
 }
