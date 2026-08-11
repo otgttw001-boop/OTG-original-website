@@ -160,325 +160,35 @@ async function submitRedemptionRequest(email, code, amount, productNote) {
 
 // ── PRODUCTS ──────────────────────────────────────────────────────────────────
 const PRODUCTS = [
-  // ── VIBRANT & POLOS / TOPS / JERSEYS
-  { 
-    id: "homegrown-26-nigeria-jersey", 
-    name: "OTG : HomeGrown ‘26 Nigeria Jersey", 
-    price: 40000, 
-    category: "vibrant", 
-    tag: "NEW", 
-    image: "/products/homegrown-26-nigeria-jersey.jpg", 
-    images: ["/products/homegrown-26-nigeria-jersey.jpg", "/products/naija-jersey-back.png"], 
-    description: "Interlock Polyester (220–250 GSM). Hybrid (3D Screen Print + Embroidery + Flock).", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "heavens-league-polo", 
-    name: "OTG : Heaven’s League Polo", 
-    price: 42000, 
-    category: "vibrant", 
-    tag: "NEW", 
-    image: "/products/heavens-league-polo.png", 
-    images: ["/products/heavens-league-polo.png"], 
-    description: "Heavyweight Cotton Interlock (240–280 GSM). Hybrid (DTF + Embroidered Patch + Watermark Sublimation/Screen).", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "crossroads-raglan", 
-    name: "OTG : CrossRoad’s Raglan", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: "NEW", 
-    image: "/products/crossroads-raglan.png", 
-    images: ["/products/crossroads-raglan.png", "/products/longsleeve-camo-green-back.png"], 
-    description: "200–240 GSM Heavyweight Combed Cotton. Hybrid (Screen Print / DTF + Woven Label).", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "Blue", "Brown", "Green", "Red"] 
-  },
-  { 
-    id: "territory-long-sleeve", 
-    name: "OTG : Territory Long Sleeve", 
-    price: 38000, 
-    category: "vibrant", 
-    tag: "NEW", 
-    image: "/products/territory-long-sleeve.png", 
-    images: ["/products/territory-long-sleeve.png"], 
-    description: "Sublimated Interlock Polyester. Hybrid (Full Sublimation + 3D Screen/Flex + Embroidered Crest).", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Blue", "Brown", "Green", "Pink", "Purple", "Red", "Yellow"] 
-  },
-  { 
-    id: "made-different-set", 
-    name: "OTG : Made Different Set", 
-    price: 55000, 
-    category: "vibrant", 
-    tag: "POPULAR", 
-    image: "/products/made-different-set.png", 
-    images: ["/products/made-different-set.png"], 
-    description: "13 oz to 14 oz Heavyweight Cotton Denim 2-piece set.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "Blue", "Green", "Pink", "Red"] 
-  },
-  { 
-    id: "heart-over-logic-tee", 
-    name: "OTG : Heart Over Logic Tee", 
-    price: 27000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/heart-over-logic-tee.jpg", 
-    images: ["/products/heart-over-logic-tee.jpg"], 
-    description: "Bold graphic tee with heart motif. Premium cotton, oversized fit.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "unmasked-tee", 
-    name: "OTG : Unmasked Tee", 
-    price: 27000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/unmasked-tee.jpg", 
-    images: ["/products/unmasked-tee.jpg"], 
-    description: "Mind over matter. Faceless graphic on premium cotton. Oversized fit.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "divine-graffiti-tanktop", 
-    name: "OTG : Divine Graffiti TankTop", 
-    price: 25000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/divine-graffiti-tanktop.jpg", 
-    images: ["/products/divine-graffiti-tanktop.jpg", "/products/armless-white.jpg"], 
-    description: "Athletic armless cut with OTG graffiti branding.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "paint-our-culture-polo", 
-    name: "OTG : Paint Our Culture Polo", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: "NEW", 
-    image: "/products/paint-our-culture-polo.png", 
-    images: ["/products/paint-our-culture-polo.png", "/products/poc-polo-back.png"], 
-    description: "Premium polo with heraldic crest, eagle emblem, and EST.MMXXV branding.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black"] 
-  },
-  { 
-    id: "out-this-world-polo", 
-    name: "OTG : Out This World Polo", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/out-this-world-polo.png", 
-    images: ["/products/out-this-world-polo.png"], 
-    description: "Out Of This World back print polo.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black"] 
-  },
-  { 
-    id: "n2f2p-polo", 
-    name: "OTG : N2F2P Polo", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/n2f2p-polo.jpeg", 
-    images: ["/products/n2f2p-polo.jpeg"], 
-    description: "N2F2P edition polo shirt.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "nations-polo", 
-    name: "OTG : Nations Polo", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/nations-polo.png", 
-    images: ["/products/nations-polo.png"], 
-    description: "OTG Nations crest polo shirt.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "members-only-jersey", 
-    name: "OTG : Members Only Jersey", 
-    price: 40000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/members-only-jersey.jpeg", 
-    images: ["/products/members-only-jersey.jpeg"], 
-    description: "Exclusive Members Only OTG jersey.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black"] 
-  },
-  { 
-    id: "since-60-long-sleeve", 
-    name: "OTG : Since ‘60 Long Sleeve", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/since-60-long-sleeve.png", 
-    images: ["/products/since-60-long-sleeve.png", "/products/longsleeve-camo-black-back.png"], 
-    description: "EST 1960 dark camo sleeves long sleeve.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Dark Camo"] 
-  },
-  { 
-    id: "above-average-long-sleeve", 
-    name: "OTG : Above Average Long Sleeve", 
-    price: 35000, 
-    category: "vibrant", 
-    tag: null, 
-    image: "/products/longsleeve-camo-green-front.png", 
-    images: ["/products/longsleeve-camo-green-front.png", "/products/longsleeve-camo-green-back.png"], 
-    description: "Above Average collection long sleeve.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "Camo"] 
-  },
-
-  // ── GIRLS
-  { 
-    id: "fly-gyal-polo", 
-    name: "OTG : Fly Gyal Polo", 
-    price: 25000, 
-    category: "girls", 
-    tag: "FOR GIRLS", 
-    image: "/products/fly-gyal-polo.jpg", 
-    images: ["/products/fly-gyal-polo.jpg"], 
-    description: "Cropped polo for the girls.", 
-    sizes: ["XS","S","M","L","XL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "wildside-set", 
-    name: "OTG : WildSide Set", 
-    price: 45000, 
-    category: "girls", 
-    tag: "FOR GIRLS", 
-    image: "/products/wildside-set.jpeg", 
-    images: ["/products/wildside-set.jpeg"], 
-    description: "WildSide 2-piece set for women.", 
-    sizes: ["XS","S","M","L","XL"], 
-    colors: ["Black", "White"] 
-  },
-  { 
-    id: "too-hot-crop-tee", 
-    name: "OTG : Too Hot Crop Tee", 
-    price: 20000, 
-    category: "girls", 
-    tag: "FOR GIRLS", 
-    image: "/products/too-hot-crop-tee.png", 
-    images: ["/products/too-hot-crop-tee.png"], 
-    description: "Bold lip graphic crop tee. Feminine cut, premium fabric.", 
-    sizes: ["XS","S","M","L","XL"], 
-    colors: ["Black", "Pink"] 
-  },
-
-  // ── BOTTOMS
-  { 
-    id: "faith-sweat-pants", 
-    name: "OTG : Faith Sweat Pants", 
-    price: 30000, 
-    category: "bottoms", 
-    tag: null, 
-    image: "/products/faith-sweat-pants.jpg", 
-    images: ["/products/faith-sweat-pants.jpg", "/products/sweatpants-pink.jpg"], 
-    description: "Premium heavyweight fleece sweatpants with cross graphics.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black", "Pink"] 
-  },
-  { 
-    id: "archive-26-camo-jorts", 
-    name: "OTG : Archive ‘26 camo Jorts", 
-    price: 32000, 
-    category: "bottoms", 
-    tag: null, 
-    image: "/products/archive-camo-shorts.jpg", 
-    images: ["/products/archive-camo-shorts.jpg"], 
-    description: "Archive '26 forest camo heavy duty denim jorts.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Forest Camo"] 
-  },
-  { 
-    id: "velocity-track-pants", 
-    name: "OTG : Velocity Track-Pants", 
-    price: 30000, 
-    category: "bottoms", 
-    tag: null, 
-    image: "/products/sweatpants-black.jpg", 
-    images: ["/products/sweatpants-black.jpg"], 
-    description: "Heavyweight black velocity track pants.", 
-    sizes: ["S","M","L","XL","XXL"], 
-    colors: ["Black"] 
-  },
-
-  // ── ACCESSORIES
-  { 
-    id: "crux-beanie", 
-    name: "OTG : Crux Beanie", 
-    price: 8000, 
-    category: "accessories", 
-    tag: null, 
-    image: "/products/crux-beanie.jpg", 
-    images: ["/products/crux-beanie.jpg", "/products/beanie-camo-otg.jpg"], 
-    description: "OTG ribbed beanie with cross graphic.", 
-    sizes: ["One Size"], 
-    colors: ["Black", "Camo"] 
-  },
-  { 
-    id: "essential-trucker", 
-    name: "OTG : Essential Trucker", 
-    price: 9000, 
-    category: "accessories", 
-    tag: null, 
-    image: "/products/essential-trucker.png", 
-    images: ["/products/essential-trucker.png", "/products/cap-pink.png", "/products/cap-blue.png"], 
-    description: "OTG studded trucker cap.", 
-    sizes: ["One Size"], 
-    colors: ["Brown", "Pink", "Blue"] 
-  },
-  { 
-    id: "cold-heart-leather-belt", 
-    name: "OTG : Cold Heart Leather Belt", 
-    price: 12000, 
-    category: "accessories", 
-    tag: null, 
-    image: "/products/cold-heart-leather-belt.jpg", 
-    images: ["/products/cold-heart-leather-belt.jpg"], 
-    description: "OTG ornate heart buckle leather belt.", 
-    sizes: ["One Size"], 
-    colors: ["Black / Silver"] 
-  },
-  { 
-    id: "core-belt", 
-    name: "OTG : Core Belt", 
-    price: 7500, 
-    category: "accessories", 
-    tag: null, 
-    image: "/products/core-belt.png", 
-    images: ["/products/core-belt.png"], 
-    description: "OTG oval buckle core belt.", 
-    sizes: ["One Size"], 
-    colors: ["Black"] 
-  },
-  { 
-    id: "signature-socks", 
-    name: "OTG : Signature Socks", 
-    price: 3500, 
-    category: "accessories", 
-    tag: null, 
-    image: "/products/signature-socks.png", 
-    images: ["/products/signature-socks.png"], 
-    description: "OTG signature crew socks.", 
-    sizes: ["One Size"], 
-    colors: ["Black"] 
-  }
+  { id: "heart-tee", name: "Heart Tee", price: 27000, category: "vibrant", tag: null, image: `${IMG}/c7ee40f6-3921-4ac8-b7b7-3be3735b5c6b.jpg`, images: [`${IMG}/c7ee40f6-3921-4ac8-b7b7-3be3735b5c6b.jpg`, `${IMG}/72fc88a0-09c5-4561-b2e2-dfe29a4dcdb8.jpg`], description: "Bold graphic tee with heart motif. Premium cotton, oversized fit.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White","Navy"] },
+  { id: "faceless-tee", name: "Faceless Tee", price: 27000, category: "vibrant", tag: null, image: `${IMG}/a293a5c3-a6b1-478a-86a5-7d8a98f58fc9.jpg`, images: [`${IMG}/a293a5c3-a6b1-478a-86a5-7d8a98f58fc9.jpg`, `${IMG}/02355bed-ba48-4fd3-aa3c-7502e472f956.jpg`], description: "Mind over matter. Faceless graphic on premium cotton. Oversized fit.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White"] },
+  { id: "otg-armless", name: "OTG Armless", price: 25000, category: "vibrant", tag: null, image: `${IMG}/8e62108e-4397-4fe7-953e-bef5b2945584.jpg`, images: [`${IMG}/8e62108e-4397-4fe7-953e-bef5b2945584.jpg`, `${IMG}/e004c194-9f65-4a25-a1d5-34d7c91f6230.jpg`], description: "Athletic armless cut with OTG branding. Lightweight performance fabric.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White"] },
+  { id: "polo-black", name: "Paint Our Culture Polo", price: 35000, category: "vibrant", tag: "NEW", image: `${IMG}/450acb2b-37fa-4eb5-b57a-892c7ddd4833.jpg`, images: [`${IMG}/450acb2b-37fa-4eb5-b57a-892c7ddd4833.jpg`, `${IMG}/f0545388-79fc-4873-9596-2543e42af02a.jpg`, `${IMG}/2407ccae-c741-488e-8f9c-be906b542b6b.jpg`, `${IMG}/0f518772-ba8f-449d-bd31-ff226916917b.jpg`], description: "Premium polo with heraldic crest, eagle emblem, and EST.MMXXV branding.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","Navy","Burgundy","Royal Blue"] },
+  // Coming soon vibrant
+  { id: "fly-again-tee", name: "OTG Fly Again Tee", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "Fly Again. Premium drop coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White"] },
+  { id: "heaven-tee", name: "Heaven Tee", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "Heaven collection tee. Coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["White","Black"] },
+  { id: "hustle-longsleeve", name: "Hustle Long Sleeve", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "Long sleeve hustle edition. Coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","Grey"] },
+  { id: "naija-polo", name: "Naija Polo", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "Naija polo. Premium drop coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Green","White","Black"] },
+  { id: "n2f2p-polo", name: "N2F2P Polo", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "N2F2P polo. Coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White"] },
+  { id: "demon-slayer-jersey", name: "Demon Slayer Jersey", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "OTG x Demon Slayer inspired jersey. Coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","Red"] },
+  { id: "otg-retro-jersey", name: "OTG Retro Jersey", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "Retro style OTG jersey. Coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White","Green"] },
+  { id: "poc-polo-v2", name: "Paint Our Culture Polo v2", price: 0, category: "vibrant", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "Second colourway of the OTG x POC polo. Coming soon.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","White","Royal Blue","Forest"] },
+  // Girls
+  { id: "lips-tee", name: "Lips Graphic Tee", price: 20000, category: "girls", tag: null, image: `${IMG}/c4f46a03-ed2f-454e-9443-73f57f7306e3.jpg`, images: [`${IMG}/c4f46a03-ed2f-454e-9443-73f57f7306e3.jpg`, `${IMG}/c5c6d433-b535-4873-bdfa-ee369fa8989c.jpg`, `${IMG}/9e2a023d-63eb-4382-9a0c-3a0e70d1969f.jpg`], description: "Artistic tee featuring bold lip graphic. Feminine cut, premium fabric.", sizes: ["XS","S","M","L","XL"], colors: ["White","Pink","Black"] },
+  { id: "feminist-two-piece", name: "Feminist Two Piece", price: 0, category: "girls", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "OTG feminist two-piece set. Coming soon.", sizes: ["XS","S","M","L","XL"], colors: ["Black","White"] },
+  { id: "otg-crop-top", name: "OTG Crop Top", price: 0, category: "girls", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "OTG branded crop top. Coming soon.", sizes: ["XS","S","M","L","XL"], colors: ["Black","White","Green"] },
+  { id: "otg-royal-top", name: "OTG Royal Top", price: 0, category: "girls", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "OTG Royal top for the girls. Coming soon.", sizes: ["XS","S","M","L","XL"], colors: ["Black","Royal Blue"] },
+  // Bottoms
+  { id: "otg-sweatpants", name: "OTG Sweat Pants", price: 30000, category: "bottoms", tag: null, image: `${IMG}/6ee3d55c-af5e-44e7-9c1e-e54f0e81e672.jpg`, images: [`${IMG}/6ee3d55c-af5e-44e7-9c1e-e54f0e81e672.jpg`], description: "Premium heavyweight fleece sweatpants with OTG embroidery.", sizes: ["S","M","L","XL","XXL"], colors: ["Black","Grey","Navy"] },
+  // Accessories
+  { id: "otg-beanie-black", name: "OTG Beanie — Black", price: 8000, category: "accessories", tag: null, image: `${IMG}/placeholder.jpg`, images: [], description: "Classic OTG ribbed beanie in all black.", sizes: ["One Size"], colors: ["Black"] },
+  { id: "otg-beanie-camo", name: "OTG Beanie — Camo", price: 8000, category: "accessories", tag: null, image: `${IMG}/placeholder.jpg`, images: [], description: "OTG ribbed beanie in camo colourway.", sizes: ["One Size"], colors: ["Camo"] },
+  { id: "otg-cap", name: "OTG Cap", price: 9000, category: "accessories", tag: null, image: `${IMG}/placeholder.jpg`, images: [], description: "OTG embroidered 6-panel cap.", sizes: ["One Size"], colors: ["Black","White"] },
+  { id: "otg-belt", name: "OTG Belt", price: 7500, category: "accessories", tag: null, image: `${IMG}/placeholder.jpg`, images: [], description: "OTG branded canvas belt.", sizes: ["One Size"], colors: ["Black"] },
+  { id: "otg-socks", name: "OTG Socks", price: 3500, category: "accessories", tag: null, image: `${IMG}/placeholder.jpg`, images: [], description: "OTG branded crew socks.", sizes: ["One Size"], colors: ["Black","White"] },
+  { id: "otg-cap-new", name: "OTG Cap (New Drop)", price: 0, category: "accessories", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "New OTG cap drop. Coming soon.", sizes: ["One Size"], colors: ["Black","Green","White"] },
+  { id: "otg-combat-belt", name: "OTG Combat Belt", price: 0, category: "accessories", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "OTG combat utility belt. Coming soon.", sizes: ["One Size"], colors: ["Black","Olive"] },
+  { id: "otg-socks-new", name: "OTG Socks (New)", price: 0, category: "accessories", tag: "COMING SOON", image: `${IMG}/placeholder.jpg`, images: [], description: "New colourway OTG socks. Coming soon.", sizes: ["One Size"], colors: ["Black","Green","White"] },
 ];
 
 const DEFAULT_STOCK = {};
@@ -487,7 +197,7 @@ PRODUCTS.forEach(p => { DEFAULT_STOCK[p.id] = {}; (p.sizes || ["S","M","L","XL",
 // ── DELIVERY ZONES ────────────────────────────────────────────────────────────
 const DELIVERY_ZONES = [
   { label: "Select your LGA...", price: 0 },
-  { label: "Central Lagos", price: 1500 },
+  { label: "Surulere", price: 1500 },
   { label: "Lagos Mainland (Yaba / Ebute-Metta)", price: 2000 },
   { label: "Mushin", price: 2000 },
   { label: "Shomolu (Bariga / Gbagada)", price: 2500 },
@@ -509,25 +219,6 @@ const DELIVERY_ZONES = [
   { label: "Epe", price: 9000 },
   { label: "Outside Lagos (nationwide)", price: 10000 },
 ];
-
-// ── SIZE CHART ────────────────────────────────────────────────────────────────
-// NOTE: placeholder measurements — swap in your real garment measurements
-const SIZE_CHART = {
-  unisex: [
-    { size: "S",   chest: "36–38", length: "27", shoulder: "17.5" },
-    { size: "M",   chest: "39–41", length: "28", shoulder: "18.5" },
-    { size: "L",   chest: "42–44", length: "29", shoulder: "19.5" },
-    { size: "XL",  chest: "45–47", length: "30", shoulder: "20.5" },
-    { size: "XXL", chest: "48–50", length: "31", shoulder: "21.5" },
-  ],
-  girls: [
-    { size: "XS", chest: "30–32", length: "22", shoulder: "14" },
-    { size: "S",  chest: "33–35", length: "23", shoulder: "14.5" },
-    { size: "M",  chest: "36–38", length: "24", shoulder: "15" },
-    { size: "L",  chest: "39–41", length: "25", shoulder: "15.5" },
-    { size: "XL", chest: "42–44", length: "26", shoulder: "16" },
-  ],
-};
 
 // ── GLOBAL CSS ────────────────────────────────────────────────────────────────
 const GLOBAL_CSS = `
@@ -857,44 +548,6 @@ const GLOBAL_CSS = `
   .fade-up { animation: fadeUp 0.5s ease forwards; }
 `;
 
-// ── SIZE GUIDE MODAL ──────────────────────────────────────────────────────────
-function SizeGuideModal({ open, onClose, category }) {
-  if (!open) return null;
-  const chart = category === "girls" ? SIZE_CHART.girls : SIZE_CHART.unisex;
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" style={{ maxWidth: "520px" }} onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <span className="modal-title">Size Guide</span>
-          <button className="modal-close" onClick={onClose}>✕</button>
-        </div>
-        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: "1rem", lineHeight: 1.5 }}>
-          All measurements in inches, garment measured flat. If you're between sizes, size up.
-        </p>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid var(--grey3)" }}>
-              {["SIZE","CHEST (IN)","LENGTH (IN)","SHOULDER (IN)"].map(h => (
-                <th key={h} style={{ textAlign: "left", padding: "0.5rem", fontFamily: "'Space Mono',monospace", fontSize: "0.58rem", color: "var(--green-bright)" }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {chart.map(row => (
-              <tr key={row.size} style={{ borderBottom: "1px solid var(--grey3)" }}>
-                <td style={{ padding: "0.6rem 0.5rem", fontWeight: 700 }}>{row.size}</td>
-                <td style={{ padding: "0.6rem 0.5rem", fontFamily: "'Space Mono',monospace", fontSize: "0.8rem", color: "var(--text-muted)" }}>{row.chest}</td>
-                <td style={{ padding: "0.6rem 0.5rem", fontFamily: "'Space Mono',monospace", fontSize: "0.8rem", color: "var(--text-muted)" }}>{row.length}</td>
-                <td style={{ padding: "0.6rem 0.5rem", fontFamily: "'Space Mono',monospace", fontSize: "0.8rem", color: "var(--text-muted)" }}>{row.shoulder}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
 // ── NAV ───────────────────────────────────────────────────────────────────────
 function Nav({ page, setPage, cartCount, openCart, mobileOpen, setMobileOpen }) {
   const pages = ["home","shop","about"];
@@ -954,7 +607,7 @@ function CartDrawer({ cart, open, onClose, removeFromCart, setPage }) {
               <img src={item.image} alt={item.name} onError={e => e.target.style.opacity="0.3"} />
               <div>
                 <div className="cart-item-name">{item.name}</div>
-                <div className="cart-item-meta">Size: {item.size} {item.color ? `· Color: ${item.color}` : ""} · Qty: {item.qty}</div>
+                <div className="cart-item-meta">Size: {item.size} · Qty: {item.qty}</div>
                 <div className="cart-item-meta" style={{color:"var(--green-bright)",marginTop:"0.3rem"}}>{fmt(item.price * item.qty)}</div>
               </div>
               <button className="cart-remove" onClick={() => removeFromCart(idx)}>✕</button>
@@ -1010,15 +663,6 @@ function ProductCard({ product, onClick }) {
 
 // ── HOME PAGE ─────────────────────────────────────────────────────────────────
 function HomePage({ setPage, setSelectedProduct }) {
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(() => {});
-    }
-  }, []);
-
   const collections = [
     { key: "vibrant", label: "Vibrant", sub: "Tees & Polos", img: PRODUCTS.find(p=>p.category==="vibrant"&&p.price>0)?.image },
     { key: "girls", label: "Girls Only", sub: "Feminine Drops", img: PRODUCTS.find(p=>p.category==="girls"&&p.price>0)?.image },
@@ -1031,10 +675,12 @@ function HomePage({ setPage, setSelectedProduct }) {
     <div>
       {/* HERO */}
       <section className="hero">
-        <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline src="/hero.mp4" />
+        <video className="hero-video" autoPlay muted loop playsInline poster="">
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
         <div className="hero-overlay" />
         <div className="hero-content fade-up">
-          <div className="hero-eyebrow">EST. MMXXV · LAGOS, NIGERIA</div>
+          <div className="hero-eyebrow">EST. MMXXV · SURULERE, LAGOS</div>
           <h1 className="hero-title">
             ON TO<br/><span className="green">GOD</span>
           </h1>
@@ -1047,9 +693,9 @@ function HomePage({ setPage, setSelectedProduct }) {
       </section>
 
       {/* COLLECTIONS */}
-      <div style={{background:"var(--grey2)",padding:"0.6rem 0",textAlign:"center",borderBottom:"1px solid var(--grey3)"}}>
-        <span style={{fontFamily:"'Space Mono',monospace",fontSize:"0.55rem",letterSpacing:"0.4em",color:"var(--green-bright)"}}>
-          NATIONWIDE DELIVERY WITHIN 5–7 WORKING DAYS · SECURE PAYSTACK CHECKOUT
+      <div style={{background:"var(--grey2)",padding:"0.5rem 0",textAlign:"center",borderBottom:"1px solid var(--grey3)"}}>
+        <span style={{fontFamily:"'Space Mono',monospace",fontSize:"0.55rem",letterSpacing:"0.5em",color:"var(--green-bright)"}}>
+          FREE DELIVERY WITHIN SURULERE · NATIONWIDE SHIPPING AVAILABLE
         </span>
       </div>
 
@@ -1097,7 +743,7 @@ function HomePage({ setPage, setSelectedProduct }) {
       <div style={{background:"var(--green)",padding:"3rem 2rem",textAlign:"center"}}>
         <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.6rem",letterSpacing:"0.5em",color:"rgba(255,255,255,0.6)",marginBottom:"1rem"}}>OTG MANIFESTO</div>
         <p style={{fontFamily:"'Cormorant Garamond',serif",fontStyle:"italic",fontSize:"clamp(1.3rem,3vw,2rem)",color:"var(--white)",maxWidth:"700px",margin:"0 auto",lineHeight:1.5}}>
-          "We don't follow trends. We build culture from Lagos to the world — On To God."
+          "We don't follow trends. We build culture from Surulere to the world — On To God."
         </p>
       </div>
 
@@ -1204,15 +850,14 @@ function ShopPage({ setPage, setSelectedProduct }) {
 }
 
 // ── PRODUCT PAGE ──────────────────────────────────────────────────────────────
-function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
+function ProductPage({ product, addToCart, setPage }) {
   const [activeImg, setActiveImg] = useState(0);
   const [size, setSize] = useState("");
-  const [color, setColor] = useState(product.colors?.[0] || "");
   const [qty, setQty] = useState(1);
   const [stock, setStock] = useState(null);
 
   useEffect(() => {
-    setActiveImg(0); setSize(""); setColor(product.colors?.[0] || ""); setQty(1);
+    setActiveImg(0); setSize(""); setQty(1);
     fetchStock(product.id).then(s => setStock(s));
   }, [product.id]);
 
@@ -1248,42 +893,25 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
             {/* COLORS */}
             {product.colors?.length > 0 && (
               <div style={{marginBottom:"1.5rem"}}>
-                <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.2em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:"0.7rem"}}>
-                  Colour {color && <span style={{color:"var(--green-bright)"}}>— {color}</span>}
-                </div>
+                <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.2em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:"0.7rem"}}>Colours</div>
                 <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
                   {product.colors.map(c => (
-                    <button 
-                      key={c} 
-                      className={`size-btn ${color===c?"selected":""}`}
-                      style={{padding:"0.5rem 1.2rem",fontSize:"0.75rem",minWidth:"auto",height:"auto",width:"auto"}}
-                      onClick={() => setColor(c)}
-                    >
-                      {c}
-                    </button>
+                    <span key={c} style={{padding:"0.3rem 0.8rem",border:"1px solid var(--grey3)",fontSize:"0.8rem",color:"var(--text-muted)"}}>{c}</span>
                   ))}
                 </div>
               </div>
             )}
 
             {/* SIZES */}
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"0.7rem"}}>
-              <span style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.2em",color:"var(--text-muted)",textTransform:"uppercase"}}>
-                Select Size {size && <span style={{color:"var(--green-bright)"}}>— {size}</span>}
-              </span>
-              <button
-                onClick={() => openSizeGuide(product.category)}
-                style={{background:"none",border:"none",color:"var(--green-bright)",fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.1em",textDecoration:"underline",cursor:"pointer"}}
-              >
-                Size Guide
-              </button>
+            <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.2em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:"0.7rem"}}>
+              Select Size {size && <span style={{color:"var(--green-bright)"}}>{size}</span>}
             </div>
             <div className="size-grid" style={{gridTemplateColumns:`repeat(${Math.min(product.sizes.length,5)},1fr)`}}>
               {product.sizes.map(s => {
-                const stockQty = sizeStock(s);
+                const qty = sizeStock(s);
                 return (
-                  <button key={s} className={`size-btn ${size===s?"selected":""} ${stockQty===0?"disabled":""}`} onClick={() => stockQty > 0 && setSize(s)} disabled={stockQty === 0}>
-                    {s}{stockQty === 0 && <span style={{display:"block",fontSize:"0.45rem"}}>SOLD</span>}
+                  <button key={s} className={`size-btn ${size===s?"selected":""} ${qty===0?"disabled":""}`} onClick={() => qty > 0 && setSize(s)} disabled={qty === 0}>
+                    {s}{qty === 0 && <span style={{display:"block",fontSize:"0.45rem"}}>SOLD</span>}
                   </button>
                 );
               })}
@@ -1297,16 +925,16 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
               <button className="qty-btn" onClick={() => setQty(q => q+1)}>+</button>
             </div>
 
-            <button className="btn btn-green" style={{width:"100%",justifyContent:"center",padding:"1.1rem",fontSize:"0.65rem",marginTop:"1.5rem"}} disabled={!size} onClick={() => { if(size) addToCart({ id:product.id, name:product.name, price:product.price, size, color, qty, image:product.image }); }}>
+            <button className="btn btn-green" style={{width:"100%",justifyContent:"center",padding:"1.1rem",fontSize:"0.65rem"}} disabled={!size} onClick={() => { if(size) addToCart({ id:product.id, name:product.name, price:product.price, size, qty, image:product.image }); }}>
               {size ? "Add to Bag →" : "Select a Size"}
             </button>
 
             {/* INFO */}
             <div style={{marginTop:"2rem",padding:"1.2rem",background:"var(--grey)",border:"1px solid var(--grey3)"}}>
-              <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.2em",color:"var(--green-bright)",marginBottom:"0.7rem"}}>DELIVERY & SHIPPING</div>
+              <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.2em",color:"var(--green-bright)",marginBottom:"0.7rem"}}>DELIVERY INFO</div>
               <p style={{fontSize:"0.85rem",color:"var(--text-muted)",lineHeight:1.6}}>
-                🚚 We deliver nationwide within 5–7 working days.<br/>
-                💳 All payments securely processed via Paystack.
+                Surulere delivery from ₦1,500 · Nationwide from ₦2,000.<br/>
+                We confirm via WhatsApp within 48 hours.
               </p>
             </div>
           </div>
@@ -1320,6 +948,7 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
 function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ firstName:"", lastName:"", email:"", phone:"", address:"", city:"", state:"" });
+  const [deliveryZone, setDeliveryZone] = useState(DELIVERY_ZONES[0]);
   const [payMethod, setPayMethod] = useState("paystack");
   const [referralCode, setReferralCode] = useState("");
   const [referralStatus, setReferralStatus] = useState(null);
@@ -1331,12 +960,12 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   useEffect(() => { if (cart.length === 0 && step < 3) setPage("shop"); }, []);
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = 0; // Standard Nationwide Delivery via Paystack
+  const shipping = deliveryZone.price;
   const discount = referralStatus === "valid" ? Math.round(subtotal * 0.05) : 0;
   const finalTotal = subtotal - discount;
-  const itemsText = cart.map(i => `${i.name} x${i.qty} (${i.size}${i.color ? `, ${i.color}` : ""})`).join(", ");
+  const itemsText = cart.map(i => `${i.name} x${i.qty} (${i.size})`).join(", ");
   const f = (k) => (e) => setForm(p => ({...p,[k]:e.target.value}));
-  const formComplete = form.firstName && form.lastName && form.email && form.phone && form.address;
+  const formComplete = form.firstName && form.lastName && form.email && form.phone && form.address && deliveryZone.price > 0;
 
   const checkReferral = async () => {
     if (!referralCode.trim()) return;
@@ -1354,7 +983,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       customer_name: `${form.firstName} ${form.lastName}`,
       customer_email: form.email,
       customer_phone: form.phone,
-      customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`,
+      customer_address: `${form.address}, ${form.city}, ${form.state}, ${deliveryZone.label}`,
       items: cart, items_text: itemsText,
       total: finalTotal + shipping, payment_ref: ref, status: "paid",
       referral_code: referralCode, referral_status: referralStatus, note,
@@ -1372,7 +1001,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const handleCOD = async () => {
     setLoading(true);
     const ref = `OTG-COD-${Date.now()}`;
-    await processOrder({ customer_name: `${form.firstName} ${form.lastName}`, customer_email: form.email, customer_phone: form.phone, customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`, items: cart, items_text: itemsText, total: finalTotal + shipping, payment_ref: ref, status: "cash_on_delivery", note });
+    await processOrder({ customer_name: `${form.firstName} ${form.lastName}`, customer_email: form.email, customer_phone: form.phone, customer_address: `${form.address}, ${form.city}, ${form.state}, ${deliveryZone.label}`, items: cart, items_text: itemsText, total: finalTotal + shipping, payment_ref: ref, status: "cash_on_delivery", note });
     decrementStock(cart);
     setLoading(false); setCart([]); setStep(3);
   };
@@ -1383,7 +1012,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
         <div style={{fontSize:"3rem",marginBottom:"1rem"}}>✦</div>
         <h2 style={{fontFamily:"'Boogaloo',cursive",fontSize:"clamp(2.5rem,8vw,4rem)",color:"var(--green-bright)",marginBottom:"1rem"}}>ORDER PLACED!</h2>
         <p style={{color:"var(--text-muted)",fontSize:"1rem",lineHeight:1.8,marginBottom:"2rem",maxWidth:"400px",margin:"0 auto 2rem"}}>
-          We'll pack it with love and deliver within 5–7 working days.<br/>
+          We'll pack it with love and get it to you soon.<br/>
           <span style={{fontFamily:"'Space Mono',monospace",fontSize:"0.7rem",color:"var(--green-bright)"}}>
             On To God · Wear the Truth ✦
           </span>
@@ -1418,9 +1047,11 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
                 <div className="form-group"><label className="form-label">City</label><input className="form-input" value={form.city} onChange={f("city")} placeholder="Lagos" /></div>
                 <div className="form-group"><label className="form-label">State</label><input className="form-input" value={form.state} onChange={f("state")} placeholder="Lagos State" /></div>
               </div>
-              <div style={{padding:"1rem",background:"rgba(26,107,58,0.1)",border:"1px solid rgba(26,107,58,0.3)",marginBottom:"1.2rem",borderRadius:"4px"}}>
-                <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.6rem",letterSpacing:"0.15em",color:"var(--green-bright)",marginBottom:"0.3rem"}}>DELIVERY TIMELINE</div>
-                <div style={{fontSize:"0.85rem",color:"var(--white)",lineHeight:1.5}}>🚚 We deliver nationwide within 5–7 working days via Paystack checkout.</div>
+              <div className="form-group">
+                <label className="form-label">Delivery Zone (LGA)</label>
+                <select className="form-select" value={deliveryZone.label} onChange={e => setDeliveryZone(DELIVERY_ZONES.find(z => z.label === e.target.value) || DELIVERY_ZONES[0])}>
+                  {DELIVERY_ZONES.map(z => <option key={z.label}>{z.label}{z.price > 0 ? ` — ${fmt(z.price)}` : ""}</option>)}
+                </select>
               </div>
               <div className="form-group">
                 <label className="form-label">Order Note (optional)</label>
@@ -1473,7 +1104,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
             <div className="checkout-card-title">Order Summary</div>
             {cart.map((item, i) => (
               <div key={i} className="order-summary-item">
-                <span style={{flex:1}}>{item.name} <span style={{color:"var(--text-muted)",fontSize:"0.8rem"}}>×{item.qty} ({item.size}{item.color ? `, ${item.color}` : ""})</span></span>
+                <span style={{flex:1}}>{item.name} <span style={{color:"var(--text-muted)",fontSize:"0.8rem"}}>×{item.qty} ({item.size})</span></span>
                 <span style={{fontFamily:"'Space Mono',monospace",fontSize:"0.8rem"}}>{fmt(item.price * item.qty)}</span>
               </div>
             ))}
@@ -1487,13 +1118,13 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
                 </div>
               )}
               <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.85rem",marginBottom:"0.5rem",color:"var(--text-muted)"}}>
-                <span>Delivery (5–7 Working Days)</span>
-                <span style={{fontFamily:"'Space Mono',monospace",color:"var(--green-bright)"}}>FREE</span>
+                <span>Delivery ({deliveryZone.price > 0 ? deliveryZone.label.split("(")[0].trim() : "Select LGA"})</span>
+                <span style={{fontFamily:"'Space Mono',monospace"}}>{shipping > 0 ? fmt(shipping) : "—"}</span>
               </div>
             </div>
             <div className="order-summary-total">
               <span>Total</span>
-              <span style={{color:"var(--green-bright)",fontSize:"1.1rem"}}>{fmt(finalTotal)}</span>
+              <span style={{color:"var(--green-bright)",fontSize:"1.1rem"}}>{fmt(finalTotal + shipping)}</span>
             </div>
           </div>
         </div>
@@ -1726,18 +1357,18 @@ function AboutPage() {
   return (
     <div style={{paddingTop:"64px",background:"var(--black)",minHeight:"100vh"}}>
       <div style={{background:"var(--green)",padding:"5rem 2rem",textAlign:"center"}}>
-        <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.5em",color:"rgba(255,255,255,0.6)",marginBottom:"1rem"}}>EST. MMXXV · LAGOS, NIGERIA</div>
+        <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",letterSpacing:"0.5em",color:"rgba(255,255,255,0.6)",marginBottom:"1rem"}}>EST. MMXXV · SURULERE, LAGOS</div>
         <h1 style={{fontFamily:"'Boogaloo',cursive",fontSize:"clamp(3rem,10vw,7rem)",lineHeight:0.9,marginBottom:"1rem"}}>OUR<br/>STORY</h1>
       </div>
       <div style={{maxWidth:"700px",margin:"0 auto",padding:"5rem 2rem"}}>
         <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.3rem",lineHeight:1.8,color:"rgba(245,245,245,0.85)",marginBottom:"2rem"}}>
-          OTG — On To God — started in Lagos, Nigeria in 2025. We build streetwear for people who move with purpose. Every piece is a statement.
+          OTG — On To God — started in Surulere, Lagos in 2025. We build streetwear for people who move with purpose. Every piece is a statement.
         </p>
         <p style={{color:"var(--text-muted)",lineHeight:1.8,marginBottom:"2rem"}}>
-          We're not here to follow trends. We paint our culture — Nigerian, proud, moving forward. From Lagos to the world.
+          We're not here to follow trends. We paint our culture — Nigerian, proud, moving forward. From Surulere to the world.
         </p>
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.5rem",marginTop:"3rem"}}>
-          {[["2025","Founded in Lagos"],["100%","Premium fabrics"],["✦","On To God"]].map(([v,l]) => (
+          {[["2025","Founded in Surulere"],["100%","Premium fabrics"],["✦","On To God"]].map(([v,l]) => (
             <div key={v} style={{textAlign:"center",padding:"2rem 1rem",background:"var(--grey)",border:"1px solid var(--grey3)"}}>
               <div style={{fontFamily:"'Boogaloo',cursive",fontSize:"2.5rem",color:"var(--green-bright)",marginBottom:"0.5rem"}}>{v}</div>
               <div style={{fontFamily:"'Space Mono',monospace",fontSize:"0.58rem",color:"var(--text-muted)",letterSpacing:"0.1em"}}>{l}</div>
@@ -1754,7 +1385,7 @@ function AboutPage() {
 }
 
 // ── FOOTER ────────────────────────────────────────────────────────────────────
-function Footer({ setPage, onSizeGuide }) {
+function Footer({ setPage }) {
   return (
     <footer className="footer">
       <div className="footer-grid">
@@ -1762,7 +1393,7 @@ function Footer({ setPage, onSizeGuide }) {
           <div className="footer-brand">OT<span>G</span></div>
           <div className="footer-tagline">Wear the Truth. On To God.</div>
           <p style={{color:"var(--text-muted)",fontSize:"0.85rem",marginTop:"1rem",lineHeight:1.6}}>
-            Premium streetwear from Lagos, Nigeria.<br/>Est. 2025.
+            Premium streetwear from Surulere, Lagos.<br/>Est. 2025.
           </p>
         </div>
         <div>
@@ -1784,20 +1415,20 @@ function Footer({ setPage, onSizeGuide }) {
           <div className="footer-col-title">Support</div>
           <span className="footer-link">Shipping Info</span>
           <span className="footer-link">Returns</span>
-          <span className="footer-link" style={{cursor:"pointer"}} onClick={onSizeGuide}>Size Guide</span>
+          <span className="footer-link">Size Guide</span>
           <span className="footer-link" onClick={() => window.open("https://wa.me/2348136437912","_blank")}>Contact Us</span>
         </div>
       </div>
       <div className="footer-bottom">
         <span>© 2025–2026 OTG – On To God. All rights reserved.</span>
-        <span>Lagos, Nigeria 🇳🇬</span>
+        <span>Surulere, Lagos, Nigeria 🇳🇬</span>
       </div>
     </footer>
   );
 }
 
 // ── APP ───────────────────────────────────────────────────────────────────────
- function App() {
+export default function App() {
   const [page, setPage] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cart, setCart] = useState([]);
@@ -1805,11 +1436,8 @@ function Footer({ setPage, onSizeGuide }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [returnOrder, setReturnOrder] = useState(null);
-  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
-  const [sizeGuideCategory, setSizeGuideCategory] = useState("unisex");
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(""), 2800); };
-  const openSizeGuide = (cat) => { setSizeGuideCategory(cat); setSizeGuideOpen(true); };
 
   const addToCart = (item) => {
     setCart(prev => {
@@ -1868,150 +1496,15 @@ function Footer({ setPage, onSizeGuide }) {
       <main>
         {page === "home" && <HomePage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
         {page === "shop" && <ShopPage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
-        {page === "product" && selectedProduct && <ProductPage product={selectedProduct} addToCart={(item) => { addToCart(item); showToast(`${item.name} added to bag ✦`); }} setPage={setPage} openSizeGuide={openSizeGuide} />}
+        {page === "product" && selectedProduct && <ProductPage product={selectedProduct} addToCart={(item) => { addToCart(item); showToast(`${item.name} added to bag ✦`); }} setPage={setPage} />}
         {page === "checkout" && <CheckoutPage cart={cart} clearCart={clearCart} setCart={setCart} setPage={setPage} setReturnOrder={setReturnOrder} />}
         {page === "creators" && <CreatorsPage setPage={setPage} />}
         {page === "about" && <AboutPage />}
       </main>
 
-      {showFooter && <Footer setPage={setPage} onSizeGuide={() => openSizeGuide("unisex")} />}
-
-      <SizeGuideModal open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} category={sizeGuideCategory} />
+      {showFooter && <Footer setPage={setPage} />}
 
       <div className={`toast ${toast?"show":""}`}>{toast}</div>
     </>
   );
-  function App() {
-  return (
-    <div className="min-h-screen bg-black text-white">
-      {/* --- HERO SECTION WITH VIDEO BACKGROUND --- */}
-      <section className="relative w-full h-screen overflow-hidden">
-        {/* Background Video */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute top-0 left-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        {/* Hero Content Overlay */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/40">
-          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
-          <p className="mt-4 text-xl">ON TO GOD</p>
-        </div>
-      </section>
-
-      {/* The rest of your existing homepage/products sections go below here... */}
-    </div>
-  )
 }
-
-
-
-// 1. Tell Vite to automatically scan all images inside src/assets/images
-const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG,JPEG}', {
-  eager: true,
-  import: 'default',
-});
-
-const getProductImage = (productName) => {
-  const matchKey = Object.keys(productImages).find((path) =>
-    path.toLowerCase().includes(`/images/${productName.toLowerCase()}/`)
-  );
-  return matchKey ? productImages[matchKey] : '';
-};
-
-// 2. MAIN COMPONENT
-function App() {
-  const products = [
-    // Your product objects go here
-  ];
-
-  return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <section className="relative w-full h-screen overflow-hidden">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute top-0 left-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/40">
-          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
-          <p className="mt-4 text-xl">ON TO GOD</p>
-        </div>
-      </section>
-
-      {/* Products Section */}
-      <section className="p-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <img 
-                src={getProductImage(product.name)} 
-                alt={product.name} 
-                className="w-full h-auto object-cover"
-              />
-              <h3 className="mt-2 text-lg font-bold">{product.name}</h3>
-              <p className="text-gray-400">{product.price}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-}
-
-function Hero() {
-  const products = [
-    // Your product objects...
-  ];
-
-  return (
-    <div className="min-h-screen bg-black text-white">
-      
-      {/* ----------------- HERO SECTION START ----------------- */}
-      <section className="relative w-full h-screen overflow-hidden flex items-center justify-center">
-        
-        {/* 👇 PLACES RIGHT HERE AS THE BACKGROUND */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        {/* Text / Overlay content sitting on top of video */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center bg-black/40 p-6 rounded-lg">
-          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
-          <p className="mt-4 text-xl">ON TO GOD</p>
-        </div>
-
-      </section>
-      {/* ------------------ HERO SECTION END ------------------ */}
-
-      {/* Product Grid Section */}
-      <section className="p-8">
-        {/* Product mapping code... */}
-      </section>
-
-    </div>
-  );
-}
-
-export default App;
-
-
