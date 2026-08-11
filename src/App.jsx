@@ -1916,7 +1916,12 @@ const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,web
   as: 'url'
 });
 
-// 2. Helper function to find the image using ONLY the product folder name
+// 1. GLOB & HELPER FUNCTIONS SIT AT THE VERY TOP (OUTSIDE APP)
+const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG,JPEG}', {
+  eager: true,
+  import: 'default',
+});
+
 const getProductImage = (productName) => {
   const matchKey = Object.keys(productImages).find((path) =>
     path.toLowerCase().includes(`/images/${productName.toLowerCase()}/`)
@@ -1924,20 +1929,52 @@ const getProductImage = (productName) => {
   return matchKey ? productImages[matchKey] : '';
 };
 
+// 2. YOUR MAIN APP COMPONENT
+function App() {
+  const products = [
+    // Your product objects go here...
+  ];
 
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <section className="relative w-full h-screen overflow-hidden">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
 
-{products.map((product) => (
-  <div key={product.id} className="product-card">
-    <img 
-      src={getProductImage(product.name)} 
-      alt={product.name} 
-      className="w-full h-auto object-cover"
-    />
-    <h3>{product.name}</h3>
-    <p>{product.price}</p>
-  </div>
-))}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white bg-black/40">
+          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
+          <p className="mt-4 text-xl">ON TO GOD</p>
+        </div>
+      </section>
+
+      {/* Product Grid Section - JSX MAP GOES INSIDE RETURN */}
+      <section className="p-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <div key={product.id} className="product-card">
+              <img 
+                src={getProductImage(product.name)} 
+                alt={product.name} 
+                className="w-full h-auto object-cover"
+              />
+              <h3 className="mt-2 text-lg font-bold">{product.name}</h3>
+              <p className="text-gray-400">{product.price}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  )
 }
 
-export default App
 
+// 3. EXPORT STATEMENT IS THE VERY LAST LINE
+export default App
