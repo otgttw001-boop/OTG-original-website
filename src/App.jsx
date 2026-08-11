@@ -1362,6 +1362,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
     </div>
   </div>
 );
+}
 
 <div className="form-row">
   <div className="form-group"><label className="form-label">City</label><input className="form-input" value={form.city} onChange={f("city")} placeholder="Lagos" /></div>
@@ -1486,7 +1487,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       </div>
     </div>
   );
-}
+
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [loginError, setLoginError] = useState("");
