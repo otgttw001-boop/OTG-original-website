@@ -1971,6 +1971,47 @@ function App() {
 }
 }
 
-// 3. EXPORT STATEMENT AT THE ABSOLUTE END
-export default App
+function App() {
+  const products = [
+    // Your product objects...
+  ];
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      
+      {/* ----------------- HERO SECTION START ----------------- */}
+      <section className="relative w-full h-screen overflow-hidden flex items-center justify-center">
+        
+        {/* 👇 PLACES RIGHT HERE AS THE BACKGROUND */}
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover -z-10"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
+
+        {/* Text / Overlay content sitting on top of video */}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center bg-black/40 p-6 rounded-lg">
+          <h1 className="text-6xl font-bold tracking-wider">OTG</h1>
+          <p className="mt-4 text-xl">ON TO GOD</p>
+        </div>
+
+      </section>
+      {/* ------------------ HERO SECTION END ------------------ */}
+
+      {/* Product Grid Section */}
+      <section className="p-8">
+        {/* Product mapping code... */}
+      </section>
+
+    </div>
+  );
+}
+
+export default App;
+
 
