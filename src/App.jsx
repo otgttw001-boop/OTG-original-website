@@ -1910,12 +1910,8 @@ function Footer({ setPage, onSizeGuide }) {
 }
 
 
-// 1. Tell Vite to automatically scan all images inside src/assets/images
-const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG}', {
-  eager: true,
-  as: 'url'
-});
 
+// 1. Tell Vite to automatically scan all images inside src/assets/images
 const productImages = import.meta.glob('/src/assets/images/*/*.{jpg,jpeg,png,webp,JPG,PNG,JPEG}', {
   eager: true,
   import: 'default',
