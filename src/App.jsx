@@ -1971,7 +1971,7 @@ function App() {
 }
 }
 
-function App() {
+function Hero() {
   const products = [
     // Your product objects...
   ];
