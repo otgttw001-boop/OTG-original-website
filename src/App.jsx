@@ -274,7 +274,7 @@ export const PRODUCTS = [
     id: "fly-gyal-polo",
     name: "OTG Fly Gyal Polo",
     price: 32000,
-    category: "polos",
+    category: "girls",   // ← changed from "polos"
     tag: "POPULAR",
     image: "/products-ready/fly-gyal-polo.jpg",
     description: "Cropped heavyweight cotton pique polo with custom chest branding.",
@@ -406,7 +406,7 @@ export const PRODUCTS = [
     id: "too-hot-crop-tee",
     name: "OTG Too Hot Crop Tee",
     price: 24000,
-    category: "tees",
+    category: "girls",   // ← changed from "tees"
     tag: "HOT",
     image: "/products-ready/too-hot-crop-tee.png",
     description: "Boxy fitted crop tee in 240 GSM single jersey cotton with bold graphic print.",
@@ -439,7 +439,7 @@ export const PRODUCTS = [
     id: "wildside-set",
     name: "OTG WildSide Set",
     price: 68000,
-    category: "sets",
+    category: "girls",   // ← changed from "sets"
     tag: "NEW",
     image: "/products-ready/wildside-set.jpeg",
     description: "Premium matching two-piece streetwear set with custom paneling and piping.",
@@ -948,7 +948,19 @@ function ProductCard({ product, onClick }) {
   return (
     <div className="product-card" onClick={() => !isComingSoon && onClick()} style={{cursor: isComingSoon ? "default" : "pointer"}}>
       <div className="product-img-wrap">
-        <img src={product.image} alt={product.name} onError={e => { e.target.src=""; e.target.style.opacity="0.2"; }} />
+        <img 
+          src={product.image} 
+          alt={product.name} 
+          onError={(e) => {
+            // Fallback: hide the broken image and show a placeholder
+            e.target.style.display = 'none';
+            const parent = e.target.parentNode;
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:#888;font-size:0.8rem;padding:0.5rem;text-align:center;';
+            placeholder.textContent = product.name;
+            parent.appendChild(placeholder);
+          }}
+        />
         {isComingSoon ? (
           <span className="product-tag gold">Coming Soon</span>
         ) : product.tag ? (
@@ -996,7 +1008,10 @@ function HomePage({ setPage, setSelectedProduct }) {
     <div>
       {/* HERO */}
       <section className="hero">
-        <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline src="/hero.mp4" />
+        <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline src="/hero.mp4">
+          <source src="/hero.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <div className="hero-overlay" />
         <div className="hero-content fade-up">
           <div className="hero-eyebrow">EST. MMXXV · LAGOS, NIGERIA</div>
@@ -1193,7 +1208,19 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
         <div className="product-page">
           {/* IMAGES */}
           <div className="product-images">
-            <img className="product-main-img" src={imgs[activeImg]} alt={product.name} onError={e => e.target.style.opacity="0.2"} />
+            <img 
+              className="product-main-img" 
+              src={imgs[activeImg]} 
+              alt={product.name} 
+              onError={(e) => {
+                e.target.style.display = 'none';
+                const parent = e.target.parentNode;
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = 'width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:#888;font-size:0.9rem;padding:1rem;text-align:center;';
+                placeholder.textContent = product.name;
+                parent.appendChild(placeholder);
+              }}
+            />
             {imgs.length > 1 && (
               <div className="product-thumbs">
                 {imgs.map((img, i) => (
@@ -1279,7 +1306,7 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
       </div>
     </div>
   );
-} // <-- CLOSED ProductPage
+}
 
 // ── CHECKOUT PAGE ─────────────────────────────────────────────────────────────
 function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
@@ -1292,6 +1319,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [checkingRef, setCheckingRef] = useState(false);
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState("");
+  const [paystackReady, setPaystackReady] = useState(false);
 
   // Helper to update form fields
   const f = (field) => (e) => setForm({ ...form, [field]: e.target.value });
@@ -1305,6 +1333,25 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const finalTotal = subtotal + shipping - discount;
   const formComplete = form.firstName && form.lastName && form.email && form.phone && form.address && form.lga;
 
+  // Check Paystack availability
+  useEffect(() => {
+    const check = setInterval(() => {
+      if (window.PaystackPop) {
+        setPaystackReady(true);
+        clearInterval(check);
+      }
+    }, 500);
+    // If script hasn't loaded after 10s, assume it failed
+    const timeout = setTimeout(() => {
+      clearInterval(check);
+      setPaystackReady(false);
+    }, 10000);
+    return () => {
+      clearInterval(check);
+      clearTimeout(timeout);
+    };
+  }, []);
+
   const checkReferral = async () => {
     if (!referralCode.trim()) return;
     setCheckingRef(true);
@@ -1315,7 +1362,10 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   };
 
   const handlePaystackPayment = () => {
-    if (!window.PaystackPop) { alert("Paystack not loaded. Check your internet connection."); return; }
+    if (!window.PaystackPop) {
+      alert("Paystack is still loading. Please wait a moment and try again.");
+      return;
+    }
     const ref = `OTG-${Date.now()}`;
     const orderData = {
       customer_name: `${form.firstName} ${form.lastName}`,
@@ -1447,8 +1497,16 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
 
               <div style={{display:"flex",gap:"1rem",marginTop:"1.5rem"}}>
                 <button className="btn btn-outline" style={{flex:"0 0 auto",fontSize:"0.6rem"}} onClick={() => setStep(1)}>← Back</button>
-                <button className="btn btn-green" style={{flex:1,justifyContent:"center",padding:"1rem"}} onClick={payMethod==="paystack"?handlePaystackPayment:handleCOD} disabled={loading}>
-                  {loading ? "Processing..." : payMethod === "paystack" ? "Pay Now →" : "Place Order →"}
+                <button 
+                  className="btn btn-green" 
+                  style={{flex:1,justifyContent:"center",padding:"1rem"}} 
+                  onClick={payMethod==="paystack" ? handlePaystackPayment : handleCOD} 
+                  disabled={loading || (payMethod === "paystack" && !paystackReady)}
+                >
+                  {loading ? "Processing..." : payMethod === "paystack" 
+                    ? (paystackReady ? "Pay Now →" : "Loading Paystack...") 
+                    : "Place Order →"
+                  }
                 </button>
               </div>
             </div>
@@ -1490,7 +1548,7 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       </div>
     </div>
   );
-} // <-- CLOSED CheckoutPage
+}
 
 // ── CREATORS PAGE ────────────────────────────────────────────────────────────
 function CreatorsPage({ setPage }) {
@@ -1709,7 +1767,7 @@ function CreatorsPage({ setPage }) {
       </div>
     </div>
   );
-} // <-- CLOSED CreatorsPage
+}
 
 // ── ABOUT PAGE ────────────────────────────────────────────────────────────────
 function AboutPage() {
