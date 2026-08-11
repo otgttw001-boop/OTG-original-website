@@ -1280,7 +1280,7 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
       </div>
     </div>
   );
-}
+
 
 // ── CHECKOUT PAGE ─────────────────────────────────────────────────────────────
 function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
@@ -1296,7 +1296,6 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
 
   useEffect(() => { if (cart.length === 0 && step < 3) setPage("shop"); }, []);
 
-  const [form, setForm] = useState({ firstName:"", lastName:"", email:"", phone:"", address:"", lga:"", city:"Lagos", state:"Lagos State" });
   const selectedZone = DELIVERY_ZONES.find(z => z.name === form.lga);
   const shipping = selectedZone ? selectedZone.price : 0;
   const discount = referralStatus === "valid" ? Math.round(subtotal * 0.05) : 0;
@@ -1989,7 +1988,25 @@ function Hero() {
     </div>
   );
 }
+function App() {
+  const [page, setPage] = useState("checkout");
+  const [cart, setCart] = useState([]);
+
+  const clearCart = () => setCart([]);
+
+  return (
+    <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
+      {page === "checkout" && (
+        <CheckoutPage 
+          cart={cart} 
+          clearCart={clearCart} 
+          setCart={setCart} 
+          setPage={setPage} 
+        />
+      )}
+      {page === "creators" && <CreatorsPage />}
+    </div>
+  );
+}
 
 export default App;
-
-
