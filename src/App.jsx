@@ -1797,7 +1797,7 @@ function Footer({ setPage, onSizeGuide }) {
 }
 
 // ── APP ───────────────────────────────────────────────────────────────────────
-export default function App() {
+ function App() {
   const [page, setPage] = useState("home");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cart, setCart] = useState([]);
