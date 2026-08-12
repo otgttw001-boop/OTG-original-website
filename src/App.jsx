@@ -995,7 +995,6 @@ function HomePage({ setPage, setSelectedProduct }) {
     }
   }, []);
 
-  // Fix: pick first product from tees or polos for Vibrant
   const vibrantProduct = PRODUCTS.find(p => p.category === "tees" || p.category === "polos");
   const collections = [
     { key: "vibrant", label: "Vibrant", sub: "Tees & Polos", img: vibrantProduct?.image },
@@ -1006,8 +1005,14 @@ function HomePage({ setPage, setSelectedProduct }) {
   const featured = PRODUCTS.filter(p => p.price > 0).slice(0, 4);
 
   const handleVideoError = (e) => {
-    console.error("Video failed to load:", e);
-    // You could show a fallback image or message here.
+    console.error('Video failed to load:', e);
+    // Show fallback text if video fails
+    e.target.style.display = 'none';
+    const parent = e.target.parentNode;
+    const fallback = document.createElement('div');
+    fallback.style.cssText = 'position:absolute;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:0;font-family:"Boogaloo",cursive;font-size:3rem;color:var(--green-bright);';
+    fallback.textContent = 'OTG';
+    parent.appendChild(fallback);
   };
 
   return (
@@ -1323,7 +1328,7 @@ function ProductPage({ product, addToCart, setPage, openSizeGuide }) {
   );
 }
 
-// ── CHECKOUT PAGE ─────────────────────────────────────────────────────────────
+// ── CHECKOUT PAGE (FIXED: no stuck loading) ────────────────────────────────
 function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({ firstName:"", lastName:"", email:"", phone:"", address:"", city:"", state:"", lga:"" });
@@ -1332,13 +1337,10 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [referralStatus, setReferralStatus] = useState(null);
   const [referralData, setReferralData] = useState(null);
   const [checkingRef, setCheckingRef] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [note, setNote] = useState("");
 
-  // Helper to update form fields
   const f = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 
-  // Derived totals
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const itemsText = cart.map(item => `${item.name} (${item.size}) ×${item.qty}`).join(', ');
   const selectedZone = DELIVERY_ZONES.find(z => z.name === form.lga);
@@ -1356,33 +1358,15 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
     setCheckingRef(false);
   };
 
-  // Dynamic Paystack loader
-  const loadPaystackScript = () => {
-    return new Promise((resolve) => {
-      if (window.PaystackPop) {
-        resolve(true);
-        return;
-      }
+  // ---- PAYSTACK HANDLER (no loading state, dynamic script load) ----
+  const handlePaystackPayment = () => {
+    if (!window.PaystackPop) {
       const script = document.createElement('script');
       script.src = 'https://js.paystack.co/v1/inline.js';
-      script.async = false; // load synchronously
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
+      script.async = false;
+      script.onload = () => handlePaystackPayment();
+      script.onerror = () => alert('Failed to load Paystack. Please check your internet.');
       document.head.appendChild(script);
-    });
-  };
-
-  const handlePaystackPayment = async () => {
-    // Ensure script is loaded
-    if (!window.PaystackPop) {
-      // Try to load it now
-      const loaded = await loadPaystackScript();
-      if (!loaded) {
-        alert("Failed to load Paystack. Please check your internet connection and try again.");
-        return;
-      }
-      // After loading, call again
-      await handlePaystackPayment();
       return;
     }
 
@@ -1396,22 +1380,40 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
       total: finalTotal, payment_ref: ref, status: "paid",
       referral_code: referralCode, referral_status: referralStatus, note,
     };
-    function onPaymentSuccess() {
+
+    const onPaymentSuccess = () => {
       processOrder(orderData);
       decrementStock(cart);
       if (referralCode && referralStatus === "valid") applyReferralReward(referralCode, finalTotal, form.email, ref);
-      setCart([]); setStep(3);
-    }
-    const handler = window.PaystackPop.setup({ key: CONFIG.PAYSTACK_KEY, email: form.email, amount: finalTotal * 100, currency: "NGN", ref, callback: onPaymentSuccess, onClose: () => {} });
+      setCart([]);
+      setStep(3);
+    };
+
+    const handler = window.PaystackPop.setup({
+      key: CONFIG.PAYSTACK_KEY,
+      email: form.email,
+      amount: finalTotal * 100,
+      currency: "NGN",
+      ref,
+      callback: onPaymentSuccess,
+      onClose: () => {}
+    });
     handler.openIframe();
   };
 
   const handleCOD = async () => {
-    setLoading(true);
     const ref = `OTG-COD-${Date.now()}`;
-    await processOrder({ customer_name: `${form.firstName} ${form.lastName}`, customer_email: form.email, customer_phone: form.phone, customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`, items: cart, items_text: itemsText, total: finalTotal, payment_ref: ref, status: "cash_on_delivery", note });
+    await processOrder({
+      customer_name: `${form.firstName} ${form.lastName}`,
+      customer_email: form.email,
+      customer_phone: form.phone,
+      customer_address: `${form.address}, ${form.city}, ${form.state} (5-7 Working Days Delivery)`,
+      items: cart, items_text: itemsText,
+      total: finalTotal, payment_ref: ref, status: "cash_on_delivery", note
+    });
     decrementStock(cart);
-    setLoading(false); setCart([]); setStep(3);
+    setCart([]);
+    setStep(3);
   };
 
   if (step === 3) {
@@ -1520,10 +1522,9 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
                 <button 
                   className="btn btn-green" 
                   style={{flex:1,justifyContent:"center",padding:"1rem"}} 
-                  onClick={payMethod==="paystack" ? handlePaystackPayment : handleCOD} 
-                  disabled={loading}
+                  onClick={payMethod === "paystack" ? handlePaystackPayment : handleCOD}
                 >
-                  {loading ? "Processing..." : payMethod === "paystack" ? "Pay Now →" : "Place Order →"}
+                  {payMethod === "paystack" ? "Pay Now →" : "Place Order →"}
                 </button>
               </div>
             </div>
@@ -1619,7 +1620,6 @@ function CreatorsPage({ setPage }) {
     else alert("Something went wrong. Contact OTG on WhatsApp.");
   };
 
-  // STEP 1 — Password gate
   if (!pwOk) return (
     <div className="creators-page" style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div className="creators-login">
@@ -1644,7 +1644,6 @@ function CreatorsPage({ setPage }) {
     </div>
   );
 
-  // STEP 2 — Dashboard login
   if (!data) return (
     <div className="creators-page" style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div className="creators-login">
@@ -1670,7 +1669,6 @@ function CreatorsPage({ setPage }) {
     </div>
   );
 
-  // STEP 3 — Dashboard
   const credit = data.credit?.credit || 0;
   const totalEarned = data.credit?.total_earned || 0;
   const UNLOCK_THRESHOLD = totalEarned > 0 ? totalEarned * 0.35 : Infinity;
@@ -1742,7 +1740,6 @@ function CreatorsPage({ setPage }) {
           <div className="stat-card"><div className="stat-value">{uses.length}</div><div className="stat-label">TOTAL REFERRALS</div></div>
         </div>
 
-        {/* PROGRESS */}
         <div className="checkout-card" style={{marginBottom:"1.5rem"}}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:"0.8rem"}}>
             <span style={{fontFamily:"'Space Mono',monospace",fontSize:"0.6rem",color:"var(--text-muted)"}}>UNLOCK PROGRESS</span>
@@ -1768,7 +1765,6 @@ function CreatorsPage({ setPage }) {
           </div>
         </div>
 
-        {/* REFERRAL HISTORY */}
         {uses.length > 0 && (
           <div className="checkout-card">
             <div className="checkout-card-title">Recent Referrals</div>
@@ -1890,7 +1886,6 @@ function App() {
   const clearCart = () => setCart([]);
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
-  // Paystack redirect handler
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -1924,7 +1919,7 @@ function App() {
   return (
     <>
       <style>{GLOBAL_CSS}</style>
-      {/* Paystack script loaded without async so it's available */}
+      {/* Paystack script loaded synchronously */}
       <script src="https://js.paystack.co/v1/inline.js" />
 
       <Nav page={page} setPage={(p) => { setPage(p); setMobileOpen(false); }} cartCount={cartCount} openCart={() => setCartOpen(true)} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
