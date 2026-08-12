@@ -274,7 +274,7 @@ export const PRODUCTS = [
     id: "fly-gyal-polo",
     name: "OTG Fly Gyal Polo",
     price: 32000,
-    category: "girls",   // ← changed from "polos"
+    category: "girls",
     tag: "POPULAR",
     image: "/products-ready/fly-gyal-polo.jpg",
     description: "Cropped heavyweight cotton pique polo with custom chest branding.",
@@ -406,7 +406,7 @@ export const PRODUCTS = [
     id: "too-hot-crop-tee",
     name: "OTG Too Hot Crop Tee",
     price: 24000,
-    category: "girls",   // ← changed from "tees"
+    category: "girls",
     tag: "HOT",
     image: "/products-ready/too-hot-crop-tee.png",
     description: "Boxy fitted crop tee in 240 GSM single jersey cotton with bold graphic print.",
@@ -439,7 +439,7 @@ export const PRODUCTS = [
     id: "wildside-set",
     name: "OTG WildSide Set",
     price: 68000,
-    category: "girls",   // ← changed from "sets"
+    category: "girls",
     tag: "NEW",
     image: "/products-ready/wildside-set.jpeg",
     description: "Premium matching two-piece streetwear set with custom paneling and piping.",
@@ -952,7 +952,6 @@ function ProductCard({ product, onClick }) {
           src={product.image} 
           alt={product.name} 
           onError={(e) => {
-            // Fallback: hide the broken image and show a placeholder
             e.target.style.display = 'none';
             const parent = e.target.parentNode;
             const placeholder = document.createElement('div');
@@ -996,19 +995,35 @@ function HomePage({ setPage, setSelectedProduct }) {
     }
   }, []);
 
+  // Fix: pick first product from tees or polos for Vibrant
+  const vibrantProduct = PRODUCTS.find(p => p.category === "tees" || p.category === "polos");
   const collections = [
-    { key: "vibrant", label: "Vibrant", sub: "Tees & Polos", img: PRODUCTS.find(p=>p.category==="vibrant"&&p.price>0)?.image },
+    { key: "vibrant", label: "Vibrant", sub: "Tees & Polos", img: vibrantProduct?.image },
     { key: "girls", label: "Girls Only", sub: "Feminine Drops", img: PRODUCTS.find(p=>p.category==="girls"&&p.price>0)?.image },
     { key: "bottoms", label: "Bottoms", sub: "Sweats & More", img: PRODUCTS.find(p=>p.category==="bottoms")?.image },
     { key: "accessories", label: "Accessories", sub: "Caps, Belts & Socks", img: PRODUCTS.find(p=>p.category==="accessories"&&p.price>0)?.image },
   ];
   const featured = PRODUCTS.filter(p => p.price > 0).slice(0, 4);
 
+  const handleVideoError = (e) => {
+    console.error("Video failed to load:", e);
+    // You could show a fallback image or message here.
+  };
+
   return (
     <div>
       {/* HERO */}
       <section className="hero">
-        <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline src="/hero.mp4">
+        <video 
+          ref={videoRef} 
+          className="hero-video" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          src="/hero.mp4"
+          onError={handleVideoError}
+        >
           <source src="/hero.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -1319,7 +1334,6 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const [checkingRef, setCheckingRef] = useState(false);
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState("");
-  const [paystackReady, setPaystackReady] = useState(false);
 
   // Helper to update form fields
   const f = (field) => (e) => setForm({ ...form, [field]: e.target.value });
@@ -1333,25 +1347,6 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
   const finalTotal = subtotal + shipping - discount;
   const formComplete = form.firstName && form.lastName && form.email && form.phone && form.address && form.lga;
 
-  // Check Paystack availability
-  useEffect(() => {
-    const check = setInterval(() => {
-      if (window.PaystackPop) {
-        setPaystackReady(true);
-        clearInterval(check);
-      }
-    }, 500);
-    // If script hasn't loaded after 10s, assume it failed
-    const timeout = setTimeout(() => {
-      clearInterval(check);
-      setPaystackReady(false);
-    }, 10000);
-    return () => {
-      clearInterval(check);
-      clearTimeout(timeout);
-    };
-  }, []);
-
   const checkReferral = async () => {
     if (!referralCode.trim()) return;
     setCheckingRef(true);
@@ -1361,11 +1356,36 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
     setCheckingRef(false);
   };
 
-  const handlePaystackPayment = () => {
+  // Dynamic Paystack loader
+  const loadPaystackScript = () => {
+    return new Promise((resolve) => {
+      if (window.PaystackPop) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://js.paystack.co/v1/inline.js';
+      script.async = false; // load synchronously
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.head.appendChild(script);
+    });
+  };
+
+  const handlePaystackPayment = async () => {
+    // Ensure script is loaded
     if (!window.PaystackPop) {
-      alert("Paystack is still loading. Please wait a moment and try again.");
+      // Try to load it now
+      const loaded = await loadPaystackScript();
+      if (!loaded) {
+        alert("Failed to load Paystack. Please check your internet connection and try again.");
+        return;
+      }
+      // After loading, call again
+      await handlePaystackPayment();
       return;
     }
+
     const ref = `OTG-${Date.now()}`;
     const orderData = {
       customer_name: `${form.firstName} ${form.lastName}`,
@@ -1501,12 +1521,9 @@ function CheckoutPage({ cart, clearCart, setCart, setPage, setReturnOrder }) {
                   className="btn btn-green" 
                   style={{flex:1,justifyContent:"center",padding:"1rem"}} 
                   onClick={payMethod==="paystack" ? handlePaystackPayment : handleCOD} 
-                  disabled={loading || (payMethod === "paystack" && !paystackReady)}
+                  disabled={loading}
                 >
-                  {loading ? "Processing..." : payMethod === "paystack" 
-                    ? (paystackReady ? "Pay Now →" : "Loading Paystack...") 
-                    : "Place Order →"
-                  }
+                  {loading ? "Processing..." : payMethod === "paystack" ? "Pay Now →" : "Place Order →"}
                 </button>
               </div>
             </div>
@@ -1907,7 +1924,8 @@ function App() {
   return (
     <>
       <style>{GLOBAL_CSS}</style>
-      <script src="https://js.paystack.co/v1/inline.js" async />
+      {/* Paystack script loaded without async so it's available */}
+      <script src="https://js.paystack.co/v1/inline.js" />
 
       <Nav page={page} setPage={(p) => { setPage(p); setMobileOpen(false); }} cartCount={cartCount} openCart={() => setCartOpen(true)} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
